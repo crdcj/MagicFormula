@@ -1,6 +1,10 @@
 # Capital Asset Pricing Model
 
-## When making a strategy analysis, we must pay attention to the risk that a asset or portfolio is exposed. One approach is to consider the Capital Asset Pricing Model, as presented by the article "In-Depth Analysis of GreenBlatt's Magic Formula: Risk or True Value":
+## Different Measures of Risk
+
+### Systematic and Unsystematic Risk
+
+&emsp;When making a strategy analysis, we must pay attention to the risk that a asset or portfolio is exposed. One approach is to consider the Capital Asset Pricing Model, as presented by the article "In-Depth Analysis of GreenBlatt's Magic Formula: Risk or True Value":
 
 $$R_{i,t} - R_{f,t} = \alpha_{i} + \beta_{i} * (R_{m,t} - R_{f,t}) + \epsilon_{i,t}$$
 
