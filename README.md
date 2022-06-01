@@ -1,2 +1,2 @@
 # MagicFormula
-Backtesting Greenblatt’s “magic formula investing” for Brazilian listed companies
+Backtesting Greenblatt’s Magic Formula for Brazilian listed companies
