@@ -50,6 +50,18 @@ def filter_data(max_cols=7, max_rows=5, max_width=10):
     # Remover a descrição do código contábil para a operação futura de unstack
     df.drop(columns=["conta_desc"], inplace=True)
 
+    # Unstack -> escolher as colunas que irão para o multiindex
+    colunas_index = df.columns[:-1].to_list()
+    # Passar o dataframe para multiindex
+    df = df.set_index(colunas_index).sort_index()
+    # Fazer o unstack do dataframe com base na última coluna do índice (conta_id)
+    df = df.unstack(level="conta_id", fill_value=0)
+    # Remover o multiindex das colunas
+    df.columns = df.columns.droplevel(0)
+    # Remover o multiindex do índice
+    df.reset_index(inplace=True)
+    df.columns.name = None
+
     return df
 
 

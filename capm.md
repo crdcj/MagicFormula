@@ -7,6 +7,7 @@ The Magic Formula is a portfolio management system that uses a combination of qu
 The canonical formula presented by GreenBlatt is composed of two parts:
 
 ## The dataset
+
 In order to apply the Magic Formula to the Brazilian stocks market, we will need two types of data to do our backtest: accounting information and market prices.
 
 The accounting information is provided by the financial statements, a document produced by each company that presents a instant picture on how its assets and liabilities are distributed. The financial statement can be published in two forms: yearly our quarterly. Once a year, around three months after the end of the business year, each company holds the Shareholder's General Meeting - SGM, with the goal to present and approve an agenda with topics fixed through a legal requirement, with one of the points of this agenda being the approval of the financial statement of the last business year. At the same time, each company can publish quarterly financial statements that reflect only the accountancy of the last three months. This quarterly document can be a regulatory requirement our just a good governance practice.
