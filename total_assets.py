@@ -6,7 +6,7 @@ pd.options.display.max_rows = 4
 df = pd.read_feather("s3://aq-dl/FinancialStatements/base.feather")
 
 df.query('doc_tp == "DFP"', inplace=True)
-df.drop(columns=["doc_tp", "doc_arq", "doc_ref", "doc_ver", "doc_id"], inplace=True)
+df.drop(columns=["doc_tp", "doc_arq", "doc_ref", "doc_id"], inplace=True)
 df.reset_index(drop=True, inplace=True)
 
 df.query('dem_tp == "CON" or conta_id == "9.01.03"', inplace=True)
@@ -58,7 +58,7 @@ df.query("total_cash > 0", inplace=True)
 df.query("ebit >= 0.001", inplace=True)
 df.query("roic >= 0", inplace=True)
 
-colunas = df.columns[:5].to_list() + [
+colunas = df.columns[:6].to_list() + [
     "total_assets",
     "shares_outstanding",
     "net_debt",
@@ -68,4 +68,4 @@ colunas = df.columns[:5].to_list() + [
 df = df[colunas].copy()
 
 df.query("shares_outstanding != 0", inplace=True)
-df.to_csv("../4_total_assets.csv", index=False)
+df.to_csv("4_total_assets.csv", index=False)

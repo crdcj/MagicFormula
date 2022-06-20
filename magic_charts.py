@@ -1,7 +1,6 @@
 # Here were going to make some charts to use in the article.
 import pandas as pd
 import altair as alt
-import numpy as np
 
 pd.options.display.max_colwidth = 10
 pd.options.display.max_rows = 5
@@ -13,10 +12,8 @@ pd.options.display.max_columns = 7
 # First we need to load the days when the docs were published.
 df_financials = pd.read_csv("4_total_assets.csv")
 
+df_financials["net_debt"]
 # # Second the market cap.
-# df_magic_stocks = pd.read_csv("2_magic_stocks.csv")
-# # change rename the colum norems to cia_nome
-# df_magic_stocks.rename(columns={"nomres": "cia_nome"}, inplace=True)
 
 # Change type of column 'doc_env' from object to datetime
 df_financials["doc_env"] = pd.to_datetime(df_financials["doc_env"])
@@ -28,26 +25,40 @@ df_chart["total_dias"] = df_financials["doc_env"].dt.day_of_year
 df_chart["doc_env"] = df_financials["doc_env"]
 df_chart["per_ini"] = df_financials["per_ini"]
 df_chart["per_fim"] = df_financials["per_fim"]
+df_chart["doc_ver"] = df_financials["doc_ver"]
 
-# Add ebit to the DataFrame
-df_chart["log_assets"] = df_financials["total_assets"].apply(np.log)
+df_chart
+
+# Add base 2 log total assets to the DataFrame
+# df_chart["log_assets"] = df_financials["total_assets"].apply(np.log2)
+df_chart["total_assets"] = df_financials["total_assets"]  # .apply(np.log2)
 
 # Sort the DataFrame by 'total_dias'
 df_chart = df_chart.sort_values(by="total_dias")
 
 # Add a new column to the DataFrame with the quantile, in respect to the 'total
 # dias' column, that row belongs.
-df_chart["Quantile"] = pd.qcut(df_chart["total_dias"], 5, labels=False)
+
+df_chart_ver_1 = df_chart[df_chart["doc_ver"] == 1].reset_index(drop=True)
+
+df_chart_ver_1["Quantile"] = pd.qcut(df_chart_ver_1["total_dias"], 5, labels=False)
 
 renaming = {0: "Q1", 1: "Q2", 2: "Q3", 3: "Q4", 4: "Q5"}
-df_chart["Quantile"] = df_chart["Quantile"].map(renaming)
+df_chart_ver_1["Quantile"] = df_chart_ver_1["Quantile"].map(renaming)
 
 eventos = pd.DataFrame(
     [
+        # {"start": "90", "end": "91", "evento": " ld"},
         {"start": "100", "end": "101", "evento": " 100 days"},
     ]
 )
 # Chart
+axis_labels = "datum.value == 10000 ? '10k' : datum.value == 100000 ? '100k'\
+: datum.value == 1000000 ? '1M' : datum.value == 10000000 ? '10M'\
+: datum.value == 100000000 ? '100M' : datum.value == 1000000000 ? '1Bn'\
+: datum.value == 10000000000 ? '10Bn' : datum.value == 100000000000 ? '100Bn'\
+: '1tn'"
+
 selector = alt.selection_single(empty="all", fields=["cia_nome"])
 
 highlight = alt.selection(
@@ -59,7 +70,7 @@ opacity_cond = alt.condition(selector, alt.value(1), alt.value(0.05))
 rule = alt.Chart(eventos).mark_rule(color="black", strokeWidth=1).encode(x="start:Q")
 text = (
     alt.Chart(eventos)
-    .mark_text(align="left", baseline="top", dy=-140)  # , size=9)
+    .mark_text(align="left", baseline="top", dy=-140, size=8)  # , size=9)
     .encode(
         alt.X("start:Q"),
         text="evento",
@@ -68,7 +79,7 @@ text = (
 )
 
 chart_total_dias = (
-    alt.Chart(df_chart, width=700, height=300)
+    alt.Chart(df_chart_ver_1, width=700, height=300)
     .mark_point()
     .encode(
         alt.X(
@@ -77,9 +88,29 @@ chart_total_dias = (
             scale=alt.Scale(domain=(0, 370), nice=False),
         ),
         alt.Y(
-            "log_assets:Q",
-            title="log(Total Assets)",
-            scale=alt.Scale(domain=(10, 30), nice=False),
+            "total_assets:Q",
+            title="Total Assets (log) - R$",
+            # scale=alt.Scale(domain=(14, 43), nice=False),
+            scale=alt.Scale(
+                type="log",
+                nice=False,
+                domain=(10_000, 2_000_000_000_000),
+            ),
+            axis=alt.Axis(
+                format="~s",
+                values=[
+                    10_000,
+                    100_000,
+                    1_000_000,
+                    10_000_000,
+                    100_000_000,
+                    1_000_000_000,
+                    10_000_000_000,
+                    100_000_000_000,
+                    1_000_000_000_000,
+                ],
+                labelExpr=(axis_labels),
+            ),
         ),
         color=alt.condition(
             selector,
