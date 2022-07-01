@@ -1,12 +1,16 @@
 # Magic Formula
 
-## What is the Magic Formula and why use it?
+### What is the Magic Formula and why use it?
 
 The Magic Formula is a portfolio management system that uses a combination of quality metrics and value proxies to identify the best possible portfolio for a given set of assets. Quality translates in the capacity that an enterprise have to maintain a consistent growth. This is a strategy that, at first, makes sense, since both quality and value are associated with long term price growth. (Nessa parte fiquei com duvida do que eh quality investing)
 
 The canonical formula presented by GreenBlatt is composed of two parts:
 
-## The dataset
+1. Return on Capital (ROIC) = EBIT / (Net Working Capital + Net Fixed Assets)
+2. Earnings Yield (EY) = EBIT / Enterprise Value
+
+
+### The dataset
 
 In order to apply the Magic Formula to the Brazilian stocks market, we will need two types of data to do our backtest: accounting data and market prices.
 
@@ -20,7 +24,17 @@ Still remaining in the individual/consolidated topic, we use the outstanding num
 
 The time interval that we defined for the backtest is from 2010 to 2022, comprising 12 years. A technicality that must be clear is that, for example, the financial statements from 2010 are available only in the early months of 2011. This is a important fact to pay attention, to avoid using information that is not available at the time of the decision. Is easy to be mistaken and think that a financial statement of a particular year was published in that same year. Usually, the Brazilian business year goes from January to December, with the financial statement necessarily being released until march 31st. 
 
-### Different Measures of Risk
+### Pruning some data
+
+When applying the Magic Formula we must do some pruning of the data. The pruning is done by removing companies that are not relevant to the backtest. The first filter that we apply remove companies from the financial and utilities sectors. The reason to remove financial companies is due to ... And the ones that provides utilities, such as electricity, water and gas, have limited growth margin, since they operate in a highly regulated sector.(tem que melhorar isso aqui)
+
+The second filter remove that companies that presents symptoms of financial or business distress. By that we mean such enterprises that (i) generates negative EBIT, (ii) have negative equity, (iii) generates negative total cash and (iv) have a ROIC below zero. Points (ii) and (iii) aims at those companies that
+
+The original data contains over 2.000 companies. After removing the financial and utilities sectors, we have 1.552 companies. 
+
+The full dataset contains more than 1,000 companies, most of them with low market liquidity. So the first step is to remove the companies that have low market liquidity. So the first step is to remove the companies 
+
+## Different Measures of Risk
 
 ### Systematic and Unsystematic Risk
 
