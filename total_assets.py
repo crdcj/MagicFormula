@@ -5,9 +5,23 @@ pd.options.display.max_rows = 4
 
 df = pd.read_feather("s3://aq-dl/FinancialStatements/base.feather")
 
+# df.query('doc_tp == "DFP"', inplace=True)
+# df.columns
+# df[df['cia_nome'].str.startswith('PETROLEO')]['cia_nome'].unique()[0]
+# df_cremer = df[df['cia_nome'] == 'PETROLEO BRASILEIRO S.A. PETROBRAS']
+# df_cremer['per_fim'].unique()
+df_included = pd.read_csv("../data/included_companies.csv", sep="|")
+
+included_codes = df_included.CD_CVM.to_list()
+
+# Remove those companies from financials dataframe
+df.query("cia_id == @included_codes", inplace=True)
+
 df.query('doc_tp == "DFP"', inplace=True)
 df.drop(columns=["doc_tp", "doc_arq", "doc_ref", "doc_id"], inplace=True)
 df.reset_index(drop=True, inplace=True)
+
+df.cia_id.nunique()
 
 df.query('dem_tp == "CON" or conta_id == "9.01.03"', inplace=True)
 # Remover coluna que não será mais usada no backtesting
@@ -52,6 +66,13 @@ df["invested_capital"] = df["equity"] + df["net_debt"]
 df["roic"] = df["ebit"] / df["invested_capital"]
 df.drop(columns=["1", "1.01.01", "1.01.02", "2.01.04", "2.02.01"], inplace=True)
 
+df_petro = df[df["cia_nome"] == "PETROLEO BRASILEIRO S.A. PETROBRAS"]
+import altair as alt
+
+chart_teste = (
+    alt.Chart(df_petro).mark_line().encode(alt.X("per_fim:T"), alt.Y("ebit:Q"))
+)
+
 df.query("equity > 0", inplace=True)
 
 df.query("total_cash > 0", inplace=True)
@@ -68,4 +89,8 @@ colunas = df.columns[:6].to_list() + [
 df = df[colunas].copy()
 
 df.query("shares_outstanding != 0", inplace=True)
-df.to_csv("4_total_assets.csv", index=False)
+
+df.cia_id.nunique()
+
+
+df.to_csv("total_assets.csv", index=False)
